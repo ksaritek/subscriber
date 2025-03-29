@@ -1,4 +1,5 @@
 mod utils;
+use actix_web::test;
 use sqlx::{Connection, PgConnection};
 use subscriber::configuration::get_configuration;
 use utils::spawn_app;
@@ -6,7 +7,7 @@ use utils::spawn_app;
 #[tokio::test]
 async fn subscribe_returns_a_200_for_valid_form_data() {
     // Arrange
-    let app_address = spawn_app().await.expect("Failed to spawn app.");
+    let test_app = spawn_app().await.expect("Failed to spawn app.");
     let config = get_configuration().expect("Failed to read configuration.");
     let connection_string = config.database.connection_string();
     let mut connection = PgConnection::connect(&connection_string)
@@ -18,7 +19,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     // Act
     let body = "name=John+Doe&email=john.doe@example.com";
     let response = client
-        .post(format!("{}/subscriptions", app_address))
+        .post(format!("{}/subscriptions", test_app.address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -40,7 +41,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
 #[tokio::test]
 async fn subscribe_returns_a_400_for_invalid_form_data() {
     // Arrange
-    let app_address = spawn_app().await.expect("Failed to spawn app.");
+    let test_app = spawn_app().await.expect("Failed to spawn app.");
     let config = get_configuration().expect("Failed to read configuration.");
     let connection_string = config.database.connection_string();
     let mut connection = PgConnection::connect(&connection_string)
@@ -58,7 +59,7 @@ async fn subscribe_returns_a_400_for_invalid_form_data() {
         // Act
         let body = invalid_body;
         let response = client
-            .post(format!("{}/subscriptions", app_address))
+            .post(format!("{}/subscriptions", test_app.address))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(body)
             .send()

@@ -14,6 +14,10 @@ watch:
 test:
 	cargo test
 
+.PHONY: check
+check:
+	cargo check
+
 .PHONY: build
 build:
 	cargo build

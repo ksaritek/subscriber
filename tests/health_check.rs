@@ -4,12 +4,12 @@ use utils::spawn_app;
 #[tokio::test]
 async fn health_check() {
     // Arrange
-    let addr = spawn_app().await.expect("Failed to spawn app.");
+    let test_app = spawn_app().await.expect("Failed to spawn app.");
     let client = reqwest::Client::new();
 
     // Act
     let response = client
-        .get(format!("{}/health_check", addr))
+        .get(format!("{}/health_check", test_app.address))
         .send()
         .await
         .expect("Failed to send request.");
