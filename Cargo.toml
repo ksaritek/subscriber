@@ -1,6 +1,31 @@
 [package]
 name = "subscriber"
 version = "0.1.0"
+authors = ["Koray Sariteke <koray.sariteke@gmail.com>"]
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "subscriber"
+path = "src/main.rs"
+
 [dependencies]
+actix-web = "4"
+reqwest = "0.12.15"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1", features = ["derive"]}
+config = "0.15.11"
+
+[dependencies.sqlx] 
+version = "0.7" 
+default-features = false 
+features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate"
+]
