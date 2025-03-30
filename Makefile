@@ -2,6 +2,7 @@
 install-tools:
 	cargo install cargo-watch
 	cargo install cargo-audit
+	cargo install cargo-udeps
 	cargo install --version="~0.7" sqlx-cli --no-default-features --features rustls,postgres
 	rustup component add clippy
 	rustup component add rustfmt
@@ -55,3 +56,6 @@ migrate:
 	DATABASE_URL="$(DATABASE_URL)" sqlx migrate run
 	@echo "Migrations completed successfully!"
 
+.PHONY: udeps
+udeps:
+	cargo +nightly udeps
