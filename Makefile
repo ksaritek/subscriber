@@ -1,5 +1,6 @@
 .PHONY: install-tools
 install-tools:
+	brew install llvm
 	cargo install cargo-watch
 	cargo install cargo-audit
 	cargo install cargo-udeps
@@ -18,6 +19,11 @@ test:
 .PHONY: check
 check:
 	cargo check
+
+.PHONY: clean
+clean:
+	cargo clean
+	rm -rf target
 
 .PHONY: build
 build:
@@ -42,19 +48,7 @@ audit:
 .PHONY: db-up
 db-up:
 	./scripts/init_db.sh
-
-.PHONY: migrate
-migrate:
-	@echo "Running database migrations..."
-	$(eval DB_USER := postgres)
-	$(eval DB_PASSWORD := password)
-	$(eval DB_NAME := newsletter)
-	$(eval DB_PORT := 15432)
-	$(eval DB_HOST := localhost)
-	$(eval DATABASE_URL := postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME))
-	DATABASE_URL="$(DATABASE_URL)" sqlx database create
-	DATABASE_URL="$(DATABASE_URL)" sqlx migrate run
-	@echo "Migrations completed successfully!"
+	./scripts/init_redis.sh
 
 .PHONY: udeps
 udeps:

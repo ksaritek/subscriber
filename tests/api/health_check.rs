@@ -1,18 +1,18 @@
-mod utils;
-use utils::spawn_app;
+use crate::helpers::spawn_app;
 
 #[tokio::test]
-async fn health_check() {
+async fn health_check_works() {
     // Arrange
-    let test_app = spawn_app().await.expect("Failed to spawn app.");
+    let app = spawn_app().await;
     let client = reqwest::Client::new();
 
     // Act
     let response = client
-        .get(format!("{}/health_check", test_app.address))
+        // Use the returned application address
+        .get(&format!("{}/health_check", &app.address))
         .send()
         .await
-        .expect("Failed to send request.");
+        .expect("Failed to execute request.");
 
     // Assert
     assert!(response.status().is_success());
